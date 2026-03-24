@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "tmdb-server": {
+      "command": "/opt/homebrew/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/sondrenodenes/mcp-mdtb-ai-pwc",
+        "run",
+        "main.py"
+      ]
+    }
+  }
+}

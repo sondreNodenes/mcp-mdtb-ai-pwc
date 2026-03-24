@@ -47,7 +47,17 @@ def get_tv_reviews(series_id: int, language: str = "en-US", page: int = 1) -> di
     Returns:
         Dictionary containing TMDB TV reviews results (keys: id, page, results, total_pages, total_results).
     """
-    # TODO: implementer denne service'en
+    api_key = os.getenv("TMDB_API_KEY")
+    if not api_key:
+        raise RuntimeError("TMDB_API_KEY not set in environment variables.")
+
+    url = f"https://api.themoviedb.org/3/tv/{series_id}/reviews"
+    params = {"language": language, "page": page}
+    headers = {"Authorization": f"Bearer {api_key}", "accept": "application/json"}
+
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    return response.json()
 
 # Review Details Service
 def get_review_details(review_id: str) -> dict:
@@ -58,7 +68,16 @@ def get_review_details(review_id: str) -> dict:
     Returns:
         Dictionary containing TMDB review details.
     """
-    # TODO: implementer denne service'en
+    api_key = os.getenv("TMDB_API_KEY")
+    if not api_key:
+        raise RuntimeError("TMDB_API_KEY not set in environment variables.")
+
+    url = f"https://api.themoviedb.org/3/review/{review_id}"
+    headers = {"Authorization": f"Bearer {api_key}", "accept": "application/json"}
+
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
 
 # Trending Search Service
 def trending_search(time_window: str = "day", language: str = "en-US") -> dict:
@@ -70,7 +89,17 @@ def trending_search(time_window: str = "day", language: str = "en-US") -> dict:
     Returns:
         Dictionary containing TMDB trending results (keys: page, results, total_pages, total_results).
     """
-    # TODO: implementer denne service'en
+    api_key = os.getenv("TMDB_API_KEY")
+    if not api_key:
+        raise RuntimeError("TMDB_API_KEY not set in environment variables.")
+
+    url = f"https://api.themoviedb.org/3/trending/all/{time_window}"
+    params = {"language": language}
+    headers = {"Authorization": f"Bearer {api_key}", "accept": "application/json"}
+
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    return response.json()
 
 # Multi Search Service
 def multi_search(query: str, include_adult: bool = False, language: str = "en-US", page: int = 1) -> dict:

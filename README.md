@@ -1,71 +1,82 @@
+<div align="center">
 
 # TMDB MCP Server
 
-## Overview
+**Give Claude superpowers over movies, TV shows, and more**
 
-This project is an MCP (Model Context Protocol) server for The Movie Database (TMDB). It provides a set of tools for searching movies, TV shows, trending content, and fetching reviews and recommendations using the TMDB API.
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![MCP](https://img.shields.io/badge/MCP-1.20+-blueviolet?style=for-the-badge&logo=anthropic&logoColor=white)](https://github.com/modelcontextprotocol/servers)
+[![TMDB](https://img.shields.io/badge/TMDB-API%20v3-01D277?style=for-the-badge&logo=themoviedatabase&logoColor=white)](https://www.themoviedb.org/)
+[![uv](https://img.shields.io/badge/uv-package%20manager-DE5FE9?style=for-the-badge&logo=astral&logoColor=white)](https://github.com/astral-sh/uv)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-## Requirements
+*A Model Context Protocol server that connects Claude AI to The Movie Database — search movies, discover trends, read reviews, and get recommendations through natural language.*
+
+</div>
+
+---
+
+## Features
+
+| Tool | Description |
+|------|-------------|
+| `tmdb_search_movies` | Search movies by title, year, region, and more |
+| `tmdb_multi_search` | Search movies, TV shows, and people in one query |
+| `tmdb_trending_search` | Get what's trending today or this week |
+| `tmdb_movie_reviews` | Fetch user reviews for any movie |
+| `tmdb_tv_reviews` | Fetch user reviews for any TV show |
+| `tmdb_review_details` | Get full details on a specific review |
+| `tmdb_tv_recommendations` | Get TV show recommendations |
+
+---
+
+## Getting Started
+
+### Prerequisites
 
 - Python 3.12+
-- [uv](https://github.com/astral-sh/uv)
+- [uv](https://github.com/astral-sh/uv) — fast Python package manager
+- A [TMDB API key](https://www.themoviedb.org/settings/api)
 
-## Setup
+### 1. Install dependencies
 
-1. **Install dependencies:**
-   ```
-   uv sync
-   ```
-
-2. **Get your TMDB API key:**
-   - Go to [TMDB API Subscription](https://www.themoviedb.org/subscription) and sign up or log in.
-   - Subscribe to the API and copy your API key (Bearer token).
-   - Create a `.env` file in the project root and add:
-     ```
-     TMDB_API_KEY="<YOUR_API_KEY>"
-     ```
-  ![screenshot of open product page](public/subscribe_screenshot.png)
-
-## Running the Server
-
-Run the server in stdio mode from the root directory:
+```bash
+uv sync
 ```
+
+### 2. Configure your API key
+
+Get your bearer token from [TMDB API Settings](https://www.themoviedb.org/settings/api), then create a `.env` file:
+
+```bash
+TMDB_API_KEY="your_bearer_token_here"
+```
+
+![TMDB subscription screenshot](public/subscribe_screenshot.png)
+
+### 3. Run the server
+
+```bash
 uv run main.py
 ```
 
-You should see `Starting MCP server...` if everything is set up correctly.
+You should see `Starting MCP server...` — you're live!
 
-## Claude Desktop Config
+---
 
-To use this server with Claude for Desktop, add it to your `claude_desktop_config.json`:
+## Claude Desktop Integration
 
-**Windows Example:**
-```
-{
-  "mcpServers": {
-    "tmdb-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "C:\\ABSOLUTE\\PATH\\TO\\movies-mcp-server",
-        "run",
-        "main.py"
-      ]
-    }
-  }
-}
-```
-Replace the path with your own absolute path to the repo.
+Add the server to your `claude_desktop_config.json`:
 
-**MacOS Example:**
-```
+**macOS** (`~/Library/Application Support/Claude/claude_desktop_config.json`)
+```json
 {
   "mcpServers": {
     "tmdb-server": {
       "command": "/opt/homebrew/bin/uv",
       "args": [
         "--directory",
-        "/ABSOLUTE/PATH/TO/movies-mcp-server",
+        "/ABSOLUTE/PATH/TO/mcp-mdtb-ai-pwc",
         "run",
         "main.py"
       ]
@@ -74,27 +85,63 @@ Replace the path with your own absolute path to the repo.
 }
 ```
 
-## Available Tools
+**Windows** (`%APPDATA%\Claude\claude_desktop_config.json`)
+```json
+{
+  "mcpServers": {
+    "tmdb-server": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "C:\\ABSOLUTE\\PATH\\TO\\mcp-mdtb-ai-pwc",
+        "run",
+        "main.py"
+      ]
+    }
+  }
+}
+```
 
-The following tools are available via MCP:
+> Replace the path with your own absolute path to this repo.
 
-- `tmdb_search_movies`: Search for movies by title, year, region, etc.
-- `tmdb_multi_search`: Search for movies, TV shows, and people in a single query.
-- `tmdb_trending_search`: Get trending movies, TV shows, and people (daily/weekly).
-- `tmdb_tv_recommendations`: Get TV show recommendations for a given series.
-- `tmdb_review_details`: Get details for a specific review by review ID.
-- `tmdb_movie_reviews`: Get user reviews for a movie.
-- `tmdb_tv_reviews`: Get user reviews for a TV show.
+---
 
-All tools return formatted strings for easy reading and integration.
+## Project Structure
+
+```
+mcp-mdtb-ai-pwc/
+├── main.py          # Entry point — starts the MCP server
+├── server.py        # MCP tool definitions
+├── services.py      # TMDB API integration layer
+├── .env             # Your API key (never committed)
+└── pyproject.toml   # Project metadata and dependencies
+```
+
+---
 
 ## Development
 
-- All TMDB API logic is in `services.py`.
-- MCP tool definitions are in `server.py`.
-- Entry point is `main.py`.
+- **TMDB API logic** lives in `services.py`
+- **MCP tool definitions** live in `server.py`
+- **Entry point** is `main.py`
+
+Run the diagnostic script to verify your setup:
+
+```bash
+uv run test_mcp_config.py
+```
+
+---
 
 ## Notes
 
-- This project is not affiliated with TMDB. You must use your own API key.
-- For more on MCP, see [Model Context Protocol servers GitHub](https://github.com/modelcontextprotocol/servers?tab=readme-ov-file).
+- This project is **not affiliated with TMDB**. You must provide your own API key.
+- For more on MCP, see the [Model Context Protocol documentation](https://github.com/modelcontextprotocol/servers).
+
+---
+
+<div align="center">
+
+Made with love, powered by [TMDB](https://www.themoviedb.org/) and [Claude](https://claude.ai)
+
+</div>
